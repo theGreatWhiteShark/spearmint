@@ -1,10 +1,12 @@
+from __future__ import absolute_import
 import sys
 import os
 import traceback
 
-from spearmint_pb2   import *
-from ExperimentGrid  import *
-from helpers         import *
+from spearmint.spearmint_pb2   import *
+from spearmint.ExperimentGrid  import *
+from spearmint.helpers         import *
+import six
 
 
 # System dependent modules
@@ -22,8 +24,12 @@ def job_runner(job):
     '''This fn runs in a new process.  Now we are going to do a little
     bookkeeping and then spin off the actual job that does whatever it is we're
     trying to achieve.'''
+    
+    log("blub")
 
-    redirect_output(job_output_file(job))
+    # redirect_output(job_output_file(job))
+    
+    log("blub")
     log("Running in wrapper mode for '%s'\n" % (job.id))
 
     ExperimentGrid.job_running(job.expt_dir, job.id)
@@ -159,7 +165,7 @@ def run_torch_job(job):
     # figure out how to get the result back out when the experiment completes.
 
     param_str = ""
-    for pname, pval in params.iteritems():
+    for pname, pval in six.iteritems(params):
         if len(pval) == 1:
             pval = str(pval[0])
         else:
@@ -194,7 +200,7 @@ def run_mcr_job(job):
     # Change into the directory.
     os.chdir(job.expt_dir)
 
-    if os.environ.has_key('MATLAB'):
+    if 'MATLAB' in os.environ:
         mcr_loc = os.environ['MATLAB']
     else:
         mcr_loc = MCR_LOCATION

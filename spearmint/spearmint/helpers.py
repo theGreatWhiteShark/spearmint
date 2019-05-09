@@ -1,10 +1,11 @@
+from __future__ import absolute_import
 import os
 import sys
 import subprocess
 import tempfile
 
 from google.protobuf import text_format
-from spearmint_pb2   import *
+from spearmint.spearmint_pb2   import *
 
 
 def log(*args):
@@ -21,7 +22,7 @@ def sh(cmd):
 
 def redirect_output(path):
     '''Redirect stdout and stderr to a file.'''
-    outfile    = open(path, 'a')
+    outfile    = open(path, 'ab')
     sys.stdout = outfile
     sys.stderr = outfile
 
@@ -39,7 +40,7 @@ def grid_for(job):
 
 def file_write_safe(path, data):
     '''Write data to a temporary file, then move to the destination path.'''
-    fh = tempfile.NamedTemporaryFile(mode='w', delete=False)
+    fh = tempfile.NamedTemporaryFile(mode='wb', delete=False)
     fh.write(data)
     fh.close()
     cmd = 'mv "%s" "%s"' % (fh.name, path)

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import numpy        as np
 import numpy.random as npr
 import scipy.stats  as sps

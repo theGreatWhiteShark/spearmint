@@ -19,6 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
 import os
 from spearmint import gp
 import sys
@@ -29,10 +30,11 @@ import numpy.random   as npr
 import scipy.linalg   as spla
 import scipy.stats    as sps
 import scipy.optimize as spo
-import cPickle
+import six.moves.cPickle
 
 from Locker  import *
 from helpers import *
+from six.moves import range
 
 
 def init(expt_dir, arg_string):
@@ -68,7 +70,7 @@ class GPEIChooser:
 
         # Write the hyperparameters out to a Pickle.
         fh = tempfile.NamedTemporaryFile(mode='w', delete=False)
-        cPickle.dump({ 'dims'   : self.D,
+        six.moves.cPickle.dump({ 'dims'   : self.D,
                        'ls'     : self.ls,
                        'amp2'   : self.amp2,
                        'noise'  : self.noise,
@@ -87,7 +89,7 @@ class GPEIChooser:
 
         if os.path.exists(self.state_pkl):
             fh    = open(self.state_pkl, 'r')
-            state = cPickle.load(fh)
+            state = six.moves.cPickle.load(fh)
             fh.close()
 
             self.D     = state['dims']
@@ -142,7 +144,7 @@ class GPEIChooser:
 
             overall_ei = np.zeros((cand.shape[0], self.mcmc_iters))
 
-            for mcmc_iter in xrange(self.mcmc_iters):
+            for mcmc_iter in range(self.mcmc_iters):
 
                 self.sample_hypers(comp, vals)
                 log("mean: %f  amp: %f  noise: %f  min_ls: %f  max_ls: %f"

@@ -5,3 +5,5 @@
 **/output
 **/best_job_and_result.txt
 **/trace.csv
+*~
+*.bak

@@ -19,18 +19,20 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
 import os
 import sys
 import tempfile
-import cPickle
+import pickle
 
 import numpy        as np
 import numpy.random as npr
 
-from spearmint_pb2 import *
-from Locker        import *
-from sobol_lib     import *
-from helpers       import *
+from spearmint.spearmint_pb2 import *
+from spearmint.Locker        import *
+from spearmint.sobol_lib     import *
+from spearmint.helpers       import *
+from six.moves import range
 
 CANDIDATE_STATE = 0
 SUBMITTED_STATE = 1
@@ -162,8 +164,8 @@ class ExperimentGrid:
         self._save_jobs()
 
     def _load_jobs(self):
-        fh   = open(self.jobs_pkl, 'r')
-        jobs = cPickle.load(fh)
+        fh   = open(self.jobs_pkl, 'rb')
+        jobs = pickle.load(fh)
         fh.close()
 
         self.vmap   = jobs['vmap']
@@ -176,13 +178,13 @@ class ExperimentGrid:
     def _save_jobs(self):
 
         # Write everything to a temporary file first.
-        fh = tempfile.NamedTemporaryFile(mode='w', delete=False)
-        cPickle.dump({ 'vmap'   : self.vmap,
+        fh = tempfile.NamedTemporaryFile(mode='wb', delete=False)
+        pickle.dump({ 'vmap'   : self.vmap,
                        'grid'   : self.grid,
                        'status' : self.status,
                        'values' : self.values,
                        'durs'   : self.durs,
-                       'proc_ids' : self.proc_ids }, fh, protocol=-1)
+                       'proc_ids' : self.proc_ids }, fh)
         fh.close()
 
         # Use an atomic move for better NFS happiness.
@@ -240,17 +242,17 @@ class GridMap:
             param.name = variable['name']
 
             if variable['type'] == 'int':
-                for dd in xrange(variable['size']):
+                for dd in range(variable['size']):
                     param.int_val.append(variable['min'] + self._index_map(u[index], variable['max']-variable['min']+1))
                     index += 1
 
             elif variable['type'] == 'float':
-                for dd in xrange(variable['size']):
+                for dd in range(variable['size']):
                     param.dbl_val.append(variable['min'] + u[index]*(variable['max']-variable['min']))
                     index += 1
 
             elif variable['type'] == 'enum':
-                for dd in xrange(variable['size']):
+                for dd in range(variable['size']):
                     ii = self._index_map(u[index], len(variable['options']))
                     index += 1
                     param.str_val.append(variable['options'][ii])

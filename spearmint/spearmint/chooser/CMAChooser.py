@@ -1,4 +1,5 @@
-from cma import CMAEvolutionStrategy
+from __future__ import absolute_import
+from .cma import CMAEvolutionStrategy
 from spearmint import util
 import Locker
 

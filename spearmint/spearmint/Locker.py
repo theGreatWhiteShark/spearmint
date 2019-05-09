@@ -19,6 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
 import os
 import sys
 import time
@@ -35,12 +36,13 @@ class Locker:
         self.locks = {}
 
     def __del__(self):
-        for filename in self.locks.keys():
+        keylist = list(self.locks)
+        for filename in keylist:
             self.locks[filename] = 1
             self.unlock(filename)
 
     def lock(self, filename):
-        if self.locks.has_key(filename):
+        if filename in self.locks:
             self.locks[filename] += 1
             return True
         else:
@@ -51,7 +53,7 @@ class Locker:
             return not fail
 
     def unlock(self, filename):
-        if not self.locks.has_key(filename):
+        if filename not in self.locks:
             #sys.stderr.write("Trying to unlock not-locked file %s.\n" % (filename))
             return True
         if self.locks[filename] == 1:

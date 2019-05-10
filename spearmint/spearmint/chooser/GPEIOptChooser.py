@@ -88,7 +88,7 @@ class GPEIOptChooser:
         self.locker.lock_wait(self.state_pkl)
 
         # Write the hyperparameters out to a Pickle.
-        fh = tempfile.NamedTemporaryFile(mode='w', delete=False)
+        fh = tempfile.NamedTemporaryFile(mode='w+b', delete=False)
         pickle.dump({ 'dims'          : self.D,
                        'ls'            : self.ls,
                        'amp2'          : self.amp2,
@@ -105,7 +105,7 @@ class GPEIOptChooser:
         self.locker.unlock(self.state_pkl)
 
         # Write the hyperparameters out to a human readable file as well
-        fh    = open(self.stats_file, 'wb')
+        fh    = open(self.stats_file, 'wt')
         fh.write('Mean Noise Amplitude <length scales>\n')
         fh.write('-----------ALL SAMPLES-------------\n')
         meanhyps = 0*np.hstack(self.hyper_samples[0])

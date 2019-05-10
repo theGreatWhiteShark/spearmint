@@ -22,7 +22,7 @@ def sh(cmd):
 
 def redirect_output(path):
     '''Redirect stdout and stderr to a file.'''
-    outfile    = open(path, 'ab')
+    outfile    = open(path, 'at')
     sys.stdout = outfile
     sys.stderr = outfile
 

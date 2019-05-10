@@ -24,12 +24,9 @@ def job_runner(job):
     '''This fn runs in a new process.  Now we are going to do a little
     bookkeeping and then spin off the actual job that does whatever it is we're
     trying to achieve.'''
-    
-    log("blub")
 
-    # redirect_output(job_output_file(job))
+    redirect_output(job_output_file(job))
     
-    log("blub")
     log("Running in wrapper mode for '%s'\n" % (job.id))
 
     ExperimentGrid.job_running(job.expt_dir, job.id)
